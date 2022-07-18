@@ -3,6 +3,7 @@
 Export playlists to M3U files.
 """
 
+# pylint: disable=invalid-name
 import argparse
 import pathlib
 import os.path
@@ -25,13 +26,13 @@ def _getParsedTraktorCollection(path=None):
         path = os.path.expanduser("~/Documents/Native Instruments/")
         if os.path.exists(path):
             traktorFolder = None
-            for folder in os.listdir(path):  # Returns subfolders in order
+            for folder in sorted(os.listdir(path)):  # Returns subfolders in order
                 if folder.startswith("Traktor"):  # Therefore latest version of Traktor will always be first
                     traktorFolder = folder
             if traktorFolder:
                 path += traktorFolder + "/collection.nml"
                 if not os.path.exists(path):
-                    raise Exception("collections.nml file not found!" )
+                    raise Exception("collections.nml file not found!")
             else:
                 raise Exception("Traktor preferences folder not found!")
         else:
@@ -81,7 +82,7 @@ def command_line_runner():
     args = vars(parser.parse_args())
 
     main(args['collection'], args['folder'])
-    if(args['upload']):
+    if args['upload']:
         upload(args['folder'])
 
 
@@ -109,6 +110,7 @@ def main(inputFile, outputPath):
                 path = path.replace('/Volumes/Gleitzpod', '/Volumes/RuseVault/Gleitz')
 
                 file.write(path + '\n')
+
 
 if __name__ == '__main__':
     command_line_runner()
